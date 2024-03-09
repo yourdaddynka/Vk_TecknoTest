@@ -1,15 +1,15 @@
 package com.vk.restapi.VKRestAPIApplication.models.user;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-public class UserCompany {
+@Table(name = "companies")
+public class Company {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String catchPhrase;

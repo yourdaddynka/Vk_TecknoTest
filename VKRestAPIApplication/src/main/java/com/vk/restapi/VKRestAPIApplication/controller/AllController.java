@@ -5,93 +5,94 @@ import com.vk.restapi.VKRestAPIApplication.models.Comment;
 import com.vk.restapi.VKRestAPIApplication.models.Photo;
 import com.vk.restapi.VKRestAPIApplication.models.Post;
 import com.vk.restapi.VKRestAPIApplication.models.user.User;
-import com.vk.restapi.VKRestAPIApplication.service.CommonService;
+import com.vk.restapi.VKRestAPIApplication.service.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/apps")
 public class AllController {
-
-    @NonNull CommonService<User,Long> userService;
-    @NonNull CommonService<Post,Long> postService;
-    @NonNull CommonService<Photo,Long> photoService;
-    @NonNull CommonService<Album,Long> albumService;
-    @NonNull CommonService<Comment,Long> commentService;
-
-    private <T, ID> List<T> findAll(CommonService<T, ID> service) {return service.findAll();}
-    private <T, ID> Optional<T> findById(CommonService<T, ID> service, ID id) {return service.findById(id);}
-    private <T, ID> Optional<T> update(CommonService<T, ID> service, T type) {return service.update(type);}
-    private <T, ID> T save(CommonService<T, ID> service, T type) {return service.save(type);}
-    private <T, ID> void remove(CommonService<T, ID> service, ID id) {service.remove(id);}
-
-
     @GetMapping("/welcome") public String Welcome(){return "<h2>Welcome to the unprotected page</h2>";}
-    @GetMapping public String Welcome2(){return "<h2>Welcome to the unprotected page</h2>";}
+
+    @NonNull private final EntityService<User> userService;
+    @NonNull private final EntityService<Post> postService;
+    @NonNull private final EntityService<Album> albumService;
+    @NonNull private final EntityService<Photo> photoService;
+    @NonNull private final EntityService<Comment> commentService;
+
+//   @NonNull private final UserService userService;
+//   @NonNull private final PostService postService;
+//    @NonNull private final AlbumService albumService;
+//    @NonNull private final PhotoService photoService;
+//   @NonNull private final CommentService commentService;
+
+    @GetMapping("/users")
+    public List<User> findAllUser() {return userService.findAll();}
+    @PostMapping("/users/save")
+    public User saveUser(@RequestBody User type) {return userService.save(type).get();}
+    @GetMapping("/users/{id}")
+    public User findByIdUser(@PathVariable("id") Long id) {return userService.findById(id).get();}
+    @PutMapping("/users/update")
+    public User updateUser(@RequestBody User type){return userService.update(type).get();}
+    @DeleteMapping("/users/delete/{id}")
+    public void removeUser(@PathVariable("id") Long id){userService.remove(id);}
+    @PostMapping(value = "/users/pushall")
+    public List<User> saveUserAll(@RequestBody List<User> type) {return userService.pushAll(type);}
+
+    @GetMapping("/posts")
+    public List<Post> findAllPost() {return postService.findAll();}
+    @PostMapping("/posts/save")
+    public Post savePost(@RequestBody Post type) {return postService.save(type).get();}
+    @GetMapping("/posts/{id}")
+    public Post findByIdPost(@PathVariable("id") Long id) {return postService.findById(id).get();}
+    @PutMapping("/posts/update")
+    public Post updatePost(@RequestBody Post type){return postService.update(type).get();}
+    @DeleteMapping("/posts/delete/{id}")
+    public void removePost(@PathVariable("id") Long id){postService.remove(id);}
+ @PostMapping(value = "/posts/pushall")
+ public List<Post> savePostAll(@RequestBody List<Post> type) {return postService.pushAll(type);}
 
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_USERS')")
-    @GetMapping("/users") public List<User> findAllUsers(){return findAll(userService);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_USERS')")
-    @PostMapping("/users/save") public User saveUsers(User type){return save(userService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_USERS')")
-    @GetMapping("/users/{id}") public Optional<User> findByIdUsers(@PathVariable Long id){return findById(userService,id);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_USERS')")
-    @PutMapping("/users/update") public Optional<User> updateUsers(User type){return update(userService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_USERS')")
-    @DeleteMapping("/users/DELETE/") public void removeUsers(Long id){remove(userService,id);}
+    @GetMapping("/albums")
+    public List<Album> findAllAlbum() {return albumService.findAll();}
+    @PostMapping("/albums/save")
+    public Album saveAlbum(@RequestBody Album type) {return albumService.save(type).get();}
+    @GetMapping("/albums/{id}")
+    public Album findByIdAlbum(@PathVariable("id") Long id) {return albumService.findById(id).get();}
+    @PutMapping("/albums/update")
+    public Album updateAlbum(@RequestBody Album type){return albumService.update(type).get();}
+    @DeleteMapping("/albums/delete/{id}")
+    public void removeAlbum(@PathVariable("id") Long id){albumService.remove(id);}
+ @PostMapping(value = "/albums/pushall")
+ public List<Album> saveAlbumAll(@RequestBody List<Album> type) {return albumService.pushAll(type);}
 
+    @GetMapping("/photos")
+    public List<Photo> findAllPhoto() {return photoService.findAll();}
+    @PostMapping("/photos/save")
+    public Photo savePhoto(@RequestBody Photo type) {return photoService.save(type).get();}
+    @GetMapping("/photos/{id}")
+    public Photo findByIdPhoto(@PathVariable("id") Long id) {return photoService.findById(id).get();}
+    @PutMapping("/photos/update")
+    public Photo updatePhoto(@RequestBody Photo type){return photoService.update(type).get();}
+    @DeleteMapping("/photos/delete/{id}")
+    public void removePhoto(@PathVariable("id") Long id){photoService.remove(id);}
+ @PostMapping(value = "/photos/pushall")
+    public List<Photo> savePhotoAll(@RequestBody List<Photo> type) {return photoService.pushAll(type);}
 
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_POSTS')")
-    @GetMapping("/posts") public List<Post> findAllPost(){return findAll(postService);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_POSTS')")
-    @PostMapping("/posts/save") public Post savePost(Post type){return save(postService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_POSTS')")
-    @GetMapping("/posts/{id}") public Optional<Post> findByIdPost(@PathVariable Long id){return findById(postService,id);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_POSTS')")
-    @PutMapping("/posts/update") public Optional<Post> updatePost(Post type){return update(postService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_POSTS')")
-    @DeleteMapping("/posts/DELETE/") public void removePost(Long id){remove(postService,id);}
-
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_ALBUMS')")
-    @GetMapping("/albums") public List<Album> findAllAlbum(){return findAll(albumService);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_ALBUMS')")
-    @PostMapping("/albums/save") public Album saveAlbum(Album type){return save(albumService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_ALBUMS')")
-    @GetMapping("/albums/{id}") public Optional<Album> findByIdAlbum(@PathVariable Long id){return findById(albumService,id);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_ALBUMS')")
-    @PutMapping("/albums/update") public Optional<Album> updateAlbum(Album type){return update(albumService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_ALBUMS')")
-    @DeleteMapping("/albums/DELETE/") public void removeAlbum(Long id){remove(albumService,id);}
-
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_PHOTOS') || hasAuthority('ROLE_ALBUMS')")
-    @GetMapping("/photos") public List<Photo> findAllPhoto(){return findAll(photoService);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_PHOTOS') || hasAuthority('ROLE_ALBUMS')")
-    @PostMapping("/photos/save") public Photo savePhoto(Photo type){return save(photoService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_PHOTOS') || hasAuthority('ROLE_ALBUMS')")
-    @GetMapping("/photos/{id}") public Optional<Photo> findByIdPhoto(@PathVariable Long id){return findById(photoService,id);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_PHOTOS') || hasAuthority('ROLE_ALBUMS')")
-    @PutMapping("/photos/update") public Optional<Photo> updatePhoto(Photo type){return update(photoService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_PHOTOS') || hasAuthority('ROLE_ALBUMS')")
-    @DeleteMapping("/photos/DELETE/") public void removePhoto(Long id){remove(photoService,id);}
-
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_COMMENTS') || hasAuthority('ROLE_POSTS')")
-    @GetMapping("/comments") public List<Comment> findAllComment(){return findAll(commentService);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_COMMENTS') || hasAuthority('ROLE_POSTS')")
-    @PostMapping("/comments/save") public Comment saveComment(Comment type){return save(commentService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_COMMENTS') || hasAuthority('ROLE_POSTS')")
-    @GetMapping("/comments/{id}") public Optional<Comment> findByIdComment(@PathVariable Long id){return findById(commentService,id);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_COMMENTS') || hasAuthority('ROLE_POSTS')")
-    @PutMapping("/comments/update") public Optional<Comment> updateComment(Comment type){return update(commentService,type);}
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') || hasAuthority('ROLE_COMMENTS') || hasAuthority('ROLE_POSTS')")
-    @DeleteMapping("/comments/DELETE/") public void removeComment(Long id){remove(commentService,id);}
+    @GetMapping("/comments")
+    public List<Comment> findAllComment() {return commentService.findAll();}
+    @PostMapping("/comments/save")
+    public Comment saveComment(@RequestBody Comment type) {return commentService.save(type).get();}
+    @GetMapping("/comments/{id}")
+    public Comment findByIdComment(@PathVariable("id") Long id) {return commentService.findById(id).get();}
+    @PutMapping("/comments/update")
+    public Comment updatePhoto(@RequestBody Comment type){return commentService.update(type).get();}
+    @DeleteMapping("/comments/delete/{id}")
+    public void removeComment(@PathVariable("id") Long id){commentService.remove(id);}
+ @PostMapping(value = "/comments/pushall")
+ public List<Comment> saveCommentAll(@RequestBody List<Comment> type) {return commentService.pushAll(type);}
 }

@@ -8,20 +8,21 @@ import lombok.Data;
 @Table(name= "users")
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
     private String username;
-    @Column(unique = true)
     private String email;
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private UserAdress address;
-
     private String phone;
-
     private String website;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private UserCompany Company;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id")
+    private Company company;
 }
+

@@ -1,8 +1,8 @@
-package com.vk.restapi.VKRestAPIApplication.service.implement;
+package com.vk.restapi.VKRestAPIApplication.old.service.implement;
 
 import com.vk.restapi.VKRestAPIApplication.models.user.User;
+import com.vk.restapi.VKRestAPIApplication.old.service.EntityService;
 import com.vk.restapi.VKRestAPIApplication.repository.UserRepository;
-import com.vk.restapi.VKRestAPIApplication.service.EntityService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;

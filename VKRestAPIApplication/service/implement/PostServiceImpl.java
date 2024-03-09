@@ -1,8 +1,8 @@
-package com.vk.restapi.VKRestAPIApplication.service.implement;
+package com.vk.restapi.VKRestAPIApplication.old.service.implement;
 
 import com.vk.restapi.VKRestAPIApplication.models.Post;
+import com.vk.restapi.VKRestAPIApplication.old.service.PostService;
 import com.vk.restapi.VKRestAPIApplication.repository.PostRepository;
-import com.vk.restapi.VKRestAPIApplication.service.EntityService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Primary
-public class PostServiceImpl implements EntityService<Post> {
+public class PostServiceImpl implements PostService {
 
     private final PostRepository repository;
 

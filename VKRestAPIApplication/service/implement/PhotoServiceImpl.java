@@ -1,8 +1,8 @@
-package com.vk.restapi.VKRestAPIApplication.service.implement;
+package com.vk.restapi.VKRestAPIApplication.old.service.implement;
 
 import com.vk.restapi.VKRestAPIApplication.models.Photo;
+import com.vk.restapi.VKRestAPIApplication.old.service.PhotoService;
 import com.vk.restapi.VKRestAPIApplication.repository.PhotoRepository;
-import com.vk.restapi.VKRestAPIApplication.service.EntityService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 @Primary
-public class PhotoServiceImpl implements EntityService<Photo> {
+public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository repository;
 
 
