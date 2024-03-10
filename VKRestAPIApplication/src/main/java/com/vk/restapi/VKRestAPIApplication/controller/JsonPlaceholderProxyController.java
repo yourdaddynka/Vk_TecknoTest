@@ -4,16 +4,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-
-//нужно:
-//1)прописать сковозной доступ т,е попасть в комментарий через юзера
-//GET	/posts/1/comments
-//GET	/comments?postId=1
-//2)отработать авторизацию, досмотреть видео, добавить возможность добавлятть юзеров
-//3)реализовать аудиты (возможно это про Aspect)
-//4)реалтзовать inmemory кэш
 
 
 @RestController
@@ -24,22 +16,44 @@ public class JsonPlaceholderProxyController {
 
     private final RestTemplate restTemplate;
 
+    @GetMapping("/welcome") public String Welcome(){return "<h2>Welcome to the unprotected page</h2>";}
+
+    private ResponseEntity<String> getEntityById(String entityUrl, Long id) {
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(entityUrl).pathSegment(id.toString()).build();
+        return restTemplate.getForEntity(uri.toUriString(),String.class);
+    }
+
+    @GetMapping(value = "/comments", params = "postId")
+    public ResponseEntity<String> getCommentsByPostId(@RequestParam("postId") Long postId) {
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL + "comments").queryParam("postId", postId).build();
+        return restTemplate.getForEntity(uri.toUriString(), String.class);
+    }
+
+    @GetMapping("/posts/{id}/comments")
+    public ResponseEntity<String> getCommentsFromPost(@PathVariable("id") Long id) {return getCommentsByPostId(id);}
+
+    @GetMapping(value = "/posts", params = "userId")
+    public ResponseEntity<String> getPostsByUserId(@RequestParam("userId") Long userId) {
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL + "posts").queryParam("userId", userId).build();
+        return restTemplate.getForEntity(uri.toUriString(), String.class);
+    }
+
+    @GetMapping(value = "/comments", params = "userId")
+    public ResponseEntity<String> getCommentsByUserId(@RequestParam("userId") Long userId) {
+        UriComponents uri = UriComponentsBuilder.fromHttpUrl(URL + "comments").queryParam("userId", userId).build();
+        return restTemplate.getForEntity(uri.toUriString(), String.class);
+    }
+
 
     @GetMapping("/users")
     public ResponseEntity<String> getUsers(){return restTemplate.getForEntity(URL + "users", String.class);}
     @PostMapping("/users/save")
     public ResponseEntity<String> saveUser(@RequestBody String type) {return restTemplate.postForEntity(URL+"users",type,String.class);}
     @GetMapping("/users/{id}")
-    public ResponseEntity<String> findByIdUser(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"users")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdUser(@PathVariable("id") Long id) {return getEntityById(URL+"users",id);}
     @PutMapping("/users/update")
     public ResponseEntity<String> updateUser(@RequestBody String type){return restTemplate.postForEntity(URL+"users",type,String.class);}
-    @DeleteMapping("users/delete/{id}")
+    @DeleteMapping("/users/delete/{id}")
     public void removeUser(@PathVariable("id") Long id){restTemplate.delete(URL+"users/"+id);}
 
 
@@ -48,13 +62,7 @@ public class JsonPlaceholderProxyController {
     @PostMapping("/posts/save")
     public ResponseEntity<String> savePost(@RequestBody String type) {return restTemplate.postForEntity(URL+"posts",type,String.class);}
     @GetMapping("/posts/{id}")
-    public ResponseEntity<String> findByIdPost(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"posts")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdPost(@PathVariable("id") Long id) {return getEntityById(URL+"posts",id);}
     @PutMapping("/posts/update")
     public ResponseEntity<String> updatePost(@RequestBody String type){return restTemplate.postForEntity(URL+"posts",type,String.class);}
     @DeleteMapping("/posts/delete/{id}")
@@ -67,13 +75,7 @@ public class JsonPlaceholderProxyController {
     @PostMapping("/albums/save")
     public ResponseEntity<String> saveAlbum(@RequestBody String type) {return restTemplate.postForEntity(URL+"albums",type,String.class);}
     @GetMapping("/albums/{id}")
-    public ResponseEntity<String> findByIdAlbum(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"albums")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdAlbum(@PathVariable("id") Long id) {return getEntityById(URL+"albums",id);}
     @PutMapping("/albums/update")
     public ResponseEntity<String> updateAlbum(@RequestBody String type){return restTemplate.postForEntity(URL+"albums",type,String.class);}
     @DeleteMapping("/albums/delete/{id}")
@@ -86,13 +88,7 @@ public class JsonPlaceholderProxyController {
     @PostMapping("/photos/save")
     public ResponseEntity<String> savePhoto(@RequestBody String type) {return restTemplate.postForEntity(URL+"photos",type,String.class);}
     @GetMapping("/photos/{id}")
-    public ResponseEntity<String> findByIdPhoto(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"photos")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdPhoto(@PathVariable("id") Long id) {return getEntityById(URL+"photos",id);}
     @PutMapping("/photos/update")
     public ResponseEntity<String> updatePhoto(@RequestBody String type){return restTemplate.postForEntity(URL+"photos",type,String.class);}
     @DeleteMapping("/photos/delete/{id}")
@@ -105,18 +101,11 @@ public class JsonPlaceholderProxyController {
     @PostMapping("/comments/save")
     public ResponseEntity<String> saveComment(@RequestBody String type) {return restTemplate.postForEntity(URL+"comments",type,String.class);}
     @GetMapping("/comments/{id}")
-    public ResponseEntity<String> findByIdComment(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"photos")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdComment(@PathVariable("id") Long id) {return getEntityById(URL+"comments",id);}
     @PutMapping("/comments/update")
     public ResponseEntity<String> updateComment(@RequestBody String type){return restTemplate.postForEntity(URL+"comments",type,String.class);}
     @DeleteMapping("/comments/delete/{id}")
     public void removeComment(@PathVariable("id") Long id){restTemplate.delete(URL+"comments/"+id);}
-
 
 
     @GetMapping("/todos")
@@ -124,15 +113,10 @@ public class JsonPlaceholderProxyController {
     @PostMapping("/todos/save")
     public ResponseEntity<String> saveTodo(@RequestBody String type) {return restTemplate.postForEntity(URL+"todos",type,String.class);}
     @GetMapping("/todos/{id}")
-    public ResponseEntity<String> findByIdTodo(@PathVariable("id") Long id) {
-        return restTemplate.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(URL+"photos")
-                        .pathSegment(id.toString())
-                        .build()
-                        .toUriString()
-                ,String.class);}
+    public ResponseEntity<String> findByIdTodo(@PathVariable("id") Long id) {return getEntityById(URL+"todos",id);}
     @PutMapping("/todos/update")
     public ResponseEntity<String> updateTodo(@RequestBody String type){return restTemplate.postForEntity(URL+"todos",type,String.class);}
     @DeleteMapping("/todos/delete/{id}")
     public void removeTodo(@PathVariable("id") Long id){restTemplate.delete(URL+"todos/"+id);}
+
 }

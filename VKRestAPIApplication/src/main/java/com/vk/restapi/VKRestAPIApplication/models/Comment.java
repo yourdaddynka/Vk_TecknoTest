@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 @Entity
 public class Comment {
-//    @OneToMany
     private Long postId;
     @Id
     @GeneratedValue
