@@ -7,4 +7,5 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Configuration
 @ComponentScan(basePackages = "com.vk.restapi.VKRestAPIApplication")
 @EnableAspectJAutoProxy
-public class MyConfig { }
+public class MyConfig {
+}

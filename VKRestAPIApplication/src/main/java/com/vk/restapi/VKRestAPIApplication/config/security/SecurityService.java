@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 public class SecurityService {
     private RolesRepository repository;
     private PasswordEncoder passwordEncoder;
-    public void addRole(Roles role){
+
+    public void addRole(Roles role) {
         role.setPassword(passwordEncoder.encode(role.getPassword()));
         repository.save(role);
     }

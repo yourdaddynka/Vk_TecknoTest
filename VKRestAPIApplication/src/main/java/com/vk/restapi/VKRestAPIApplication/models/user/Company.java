@@ -1,6 +1,5 @@
 package com.vk.restapi.VKRestAPIApplication.models.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 

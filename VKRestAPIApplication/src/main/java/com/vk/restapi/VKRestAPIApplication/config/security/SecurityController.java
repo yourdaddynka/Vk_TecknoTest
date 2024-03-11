@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("api/v1")
 public class SecurityController {
-@NonNull  private SecurityService service;
+    @NonNull
+    private SecurityService service;
+
     @PostMapping("/new-user")
-    public String addRole(@RequestBody Roles role){
+    public String addRole(@RequestBody Roles role) {
         service.addRole(role);
         return "User is saved";
     }

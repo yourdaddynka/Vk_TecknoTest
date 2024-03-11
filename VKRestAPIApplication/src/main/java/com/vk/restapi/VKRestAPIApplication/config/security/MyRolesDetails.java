@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 public class MyRolesDetails implements UserDetails {
     private final Roles role;
 
-    public MyRolesDetails(Roles role){this.role = role;}
+    public MyRolesDetails(Roles role) {
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

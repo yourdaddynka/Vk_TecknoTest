@@ -10,6 +10,7 @@ public class Roles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String role;
-    @Column(unique = true) private String name;
+    @Column(unique = true)
+    private String name;
     private String password;
 }
